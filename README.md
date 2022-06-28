@@ -72,3 +72,29 @@ context.listen<HomeState>((state) => [
           state.otherValue,
         ]);
 ```
+
+## Events
+
+Events can be defined using a base event (in this case HomeEvent) as an abstract class.  Other event will extend this base class.
+The onEvent() function within the state provider can then check the exact type of the incoming event, and respond accordingly.
+
+```dart
+abstract class HomeEvent {}
+
+class HomeUpdateValue extends HomeEvent {
+  String value;
+  HomeUpdateValue(this.value);
+}
+
+class HomeUpdateOtherValue extends HomeEvent {
+  String value;
+  HomeUpdateOtherValue(this.value);
+}
+```
+
+## File structure
+
+home.dart (holds the Home widget, and the HomeState widget)
+home (folder)
+  home_view.dart (all the UI logic lives here)
+  home_events.dart
