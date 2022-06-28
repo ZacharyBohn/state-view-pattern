@@ -4,6 +4,10 @@
 
 - Provide widgets to simply state management, and encourage the use of clean state management.
 
+## Copy from
+
+The only file that needs to be copied / used from this repo is lib/state_view.dart
+
 ## StateView
 
 This will represent a page or a widget that holds a fair amount of complexity.
