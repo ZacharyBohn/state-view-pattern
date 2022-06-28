@@ -94,7 +94,7 @@ class HomeUpdateOtherValue extends HomeEvent {
 
 ## File structure
 
-home.dart (holds the Home widget, and the HomeState widget)
-home (folder)
-  home_view.dart (all the UI logic lives here)
-  home_events.dart
+- home.dart (holds the Home widget, and the HomeState widget)
+- home (folder)
+  - home_view.dart (all the UI logic lives here)
+  - home_events.dart
