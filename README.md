@@ -1,16 +1,70 @@
-# state_view_pattern
+# An example of the state view pattern
 
-A new Flutter project.
+## Goals
 
-## Getting Started
+- Provide widgets to simply state management, and encourage the use of clean state management.
 
-This project is a starting point for a Flutter application.
+## StateView
 
-A few resources to get you started if this is your first Flutter project:
+This will represent a page or a widget that holds a fair amount of complexity.
+For simplier widgets, prefer the use of just a stateful widget.  This widget's
+purpose is primarly to reduce boiler plate.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```dart
+class Home extends StateView<HomeState> {
+  Home({Key? key})
+      : super(
+          key: key,
+          stateBuilder: (context) => HomeState(context),
+          view: HomeView(),
+        );
+}
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## StateProvider
+
+This represents the state for a page.  It holds variables, updates listeners, and responds to events.
+Events can be used as an interface between UI and state.  For example, when a submit button is tapped,
+then a SubmitButtonTappedEvent can be created, then the state can add logic to respond to that event
+speficially, intead of the submit button updating the state directly.
+
+BuildContext is passed into the state provider to provide the state provider the ability to show dialogs,
+and navigate as necessary.
+
+```dart
+class HomeState extends StateProvider<HomeEvent> {
+  HomeState(super.context);
+
+
+  @override
+  void onEvent(HomeEvent event) {
+    if (event is HomeUpdateValue) {
+      _value = event.value;
+      notifyListeners();
+    }
+    return;
+  }
+
+
+
+  String _value = 'Original Value';
+  String get value => _value;
+}
+```
+
+
+
+## context.listen
+
+Typically, when a provider notifies its listeners, all of the listeners are rebuilt.  The listen() function
+will allow widgets to select widget values of a provider that they wish to listen to.  The provider package
+already has a function, select(), that allows this.  This function merely simplifies the syntax of listening
+to multiple values, without having to make a select() call on each one.
+
+```dart
+context.listen<HomeState>((state) => [
+          state.value,
+          state.otherValue,
+        ]);
+```
