@@ -31,7 +31,7 @@ class Home extends StateView<HomeState> {
 This represents the state for a page.  It holds variables, updates listeners, and responds to events.
 Events can be used as an interface between UI and state.  For example, when a submit button is tapped,
 then a SubmitButtonTappedEvent can be created, then the state can add logic to respond to that event
-speficially, intead of the submit button updating the state directly.
+speficially, instead of the submit button updating the state directly.
 
 BuildContext is passed into the state provider to provide the state provider the ability to show dialogs,
 and navigate as necessary.
