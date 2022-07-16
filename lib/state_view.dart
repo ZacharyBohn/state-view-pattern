@@ -11,9 +11,6 @@ import 'package:provider/provider.dart';
 ///          view: Container(),
 ///        );
 /// }
-///
-/// Remember to add the type to StateView, or the view widget
-/// will not be able to find the provider.
 class StateView<T extends StateProvider> extends StatelessWidget {
   final T Function(BuildContext) stateBuilder;
   final Widget view;
@@ -21,7 +18,13 @@ class StateView<T extends StateProvider> extends StatelessWidget {
     Key? key,
     required this.stateBuilder,
     required this.view,
-  }) : super(key: key);
+  })  : assert(
+            // ignore: unnecessary_type_check
+            T is! dynamic,
+            'Must specify a type.  '
+            'Eg. class HomeView extends StateView<HomeState> {}'
+            'instead of class HomeView extends StateView {}'),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
