@@ -75,8 +75,8 @@ context.listen<HomeState>((state) => [
 
 ## Events
 
-Events can be defined using a base event (in this case HomeEvent) as an abstract class.  Other event will extend this base class.
-The onEvent() function within the state provider can then check the exact type of the incoming event, and respond accordingly.
+- Events can be defined using a base event (in this case HomeEvent) as an abstract class.  Other event will extend this base class.  The onEvent() function within the state provider can then check the exact type of the incoming event, and respond accordingly.
+- The primary purpose of events is to decouple UI widgets from state.  Instead of some UI component updating a provider directly (therefore being coupled), the UI component send the provider an event with all the necessary data included.
 
 ```dart
 abstract class HomeEvent {}
