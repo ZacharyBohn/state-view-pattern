@@ -47,7 +47,11 @@ class StateView<T extends StateProvider> extends StatelessWidget {
 ///}
 abstract class StateProvider<E> extends ChangeNotifier {
   BuildContext context;
-  StateProvider(this.context);
+  StateProvider(this.context)
+      :
+        // ignore: unnecessary_type_check
+        assert(E is! dynamic, 'Specify a base event class'),
+        super();
 
   void onEvent(E event);
 }
