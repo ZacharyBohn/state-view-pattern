@@ -2,7 +2,7 @@
 
 ## Goals
 
-- Provide widgets to simply state management, and encourage the use of clean state management.
+- Provide widgets to simplify state management, and encourage the use of clean state management.
 
 ## Copy from
 
