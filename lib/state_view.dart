@@ -22,7 +22,7 @@ class StateView<T extends StateProvider> extends StatelessWidget {
             // ignore: unnecessary_type_check
             T is! dynamic,
             'Must specify a type.  '
-            'Eg. class HomeView extends StateView<HomeState> {}'
+            'Eg. class HomeView extends StateView<HomeState> {}  '
             'instead of class HomeView extends StateView {}'),
         super(key: key);
 
