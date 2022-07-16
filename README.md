@@ -10,9 +10,9 @@ The only file that needs to be copied / used from this repo is lib/state_view.da
 
 ## StateView
 
-This will represent a page or a widget that holds a fair amount of complexity.
-For simplier widgets, prefer the use of just a stateful widget.  This widget's
+- This will represent a page or a widget that holds a fair amount of complexity.  For simplier widgets, prefer the use of just a stateful widget.  This widget's
 purpose is primarly to reduce boiler plate.
+- This will be the widget that is navigated to.
 
 ```dart
 class Home extends StateView<HomeState> {
