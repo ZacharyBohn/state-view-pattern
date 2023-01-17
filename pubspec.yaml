@@ -1,7 +1,7 @@
 name: state_view
 description: Provides the state view pattern for Flutter
 repository: https://github.com/ZacharyBohn/state-view-pattern
-version: 0.0.2
+version: 0.0.3
 homepage:
 
 environment:
