@@ -1,5 +1,6 @@
 name: state_view
 description: Provides the state view pattern for Flutter
+repository: https://github.com/ZacharyBohn/state-view-pattern
 version: 0.0.2
 homepage:
 
@@ -8,14 +9,14 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  collection: ^1.16.0
+  collection: 1.16.0
   flutter:
     sdk: flutter
-  provider: ^6.0.5
+  provider: 6.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: 2.0.0
 
 flutter:
