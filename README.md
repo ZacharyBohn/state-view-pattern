@@ -90,5 +90,100 @@ Let's look at one final sample that ties everything together as well as introduc
 
 
 ```dart
-TODO
+
+class HomePage extends StateView<HomeState> {
+  final String initialUsername;
+  HomePage({
+    Key? key,
+    required this.initialUsername,
+  }) : super(
+          key: key,
+          stateBuilder: (context) => HomeState(context),
+          view: HomeView(),
+        );
+}
+
+class HomeState extends StateProvider<HomePage, HomeEvent> {
+  HomeState(BuildContext context)
+      : super(
+          context,
+          // if AuthProvider was a ChangeNotifier or StateProvider
+          // higher in the widget tree, then whenever it notifies
+          // its listeners, then the OnAuthUpdated event will be
+          // emitted on this class
+          emitters: {
+            context.read<AuthProvider>(): OnAuthUpdated(),
+          },
+        ) {
+    // the `widget` variable can be used to access variables
+    // defined on the HomePage class.  This is just to avoid
+    // having to define parameters multiple times.
+    _username = widget.initialUsername;
+  }
+
+  late String _username;
+  String get username => _username;
+
+  @override
+  void onEvent(HomeEvent event) {
+    // check which event was emitted and define
+    // handlers for each event
+    if (event is OnUserNameChanged) {
+        // accessing event variables
+      _username = event.newUsername;
+      notifyListeners();
+    }
+    if (event is OnSaveButtonTap) {
+      // send username to database
+    }
+    if (event is OnAuthUpdated) {
+      // respond to auth event
+    }
+    return;
+  }
+}
+
+// base event define for HomeState typing
+abstract class HomeEvent {}
+
+class OnSaveButtonTap extends HomeEvent {}
+
+class OnUserNameChanged extends HomeEvent {
+  final String newUsername;
+  OnUserNameChanged(this.newUsername);
+}
+
+class OnAuthUpdated extends HomeEvent {}
+
+/// This would start a new file: home_view.dart
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // watch is used instead of read so that this widget
+    // will rebuild when HomeState notifies listeners
+    final state = context.watch<HomeState>();
+    return Scaffold(
+      body: Column(
+        children: [
+          Text('Current username: ${state.username}'),
+          TextField(
+            onChanged: (String value) {
+                // emitting a UI event with a value
+              state.onEvent(OnUserNameChanged(value));
+            },
+          ),
+          TextButton(
+            child: Text('Save'),
+            onPressed: () {
+                // emitting a UI event
+              state.onEvent(OnSaveButtonTap());
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
 ```
