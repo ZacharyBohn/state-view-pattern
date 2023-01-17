@@ -26,10 +26,10 @@ class StateView<T extends StateProvider> extends StatelessWidget {
     required this.view,
   }) : super(key: key) {
     assert(
-      T.runtimeType != dynamic,
+      T.toString() != 'StateProvider<StatelessWidget, dynamic>',
       'Must specify a type.  '
-      'Eg. class HomeView extends StateView<HomeState> {}  '
-      'instead of class HomeView extends StateView {}',
+      'Eg. class HomePage extends StateView<HomeState> {}  '
+      'instead of class HomePage extends StateView {}',
     );
   }
 
