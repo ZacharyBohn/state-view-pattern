@@ -1,6 +1,10 @@
+## 0.0.5
+
+* Adds example and description
+
 ## 0.0.4
 
-* Added executable to be able to create pages quickly
+* Adds create script
 
 ## 0.0.1
 

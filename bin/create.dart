@@ -65,7 +65,6 @@ import 'package:state_view/state_view.dart';
 import '${name}_view.dart';
 import '${name}_events.dart';
 export '${name}_events.dart';
-
 class $nameCapitalized extends StateView<${nameCapitalized}State> {
   $nameCapitalized({Key? key})
       : super(
@@ -86,7 +85,6 @@ class ${nameCapitalized}State extends StateProvider<$nameCapitalized, ${nameCapi
 String createEventsFile(String name) {
   String nameCapitalized = name.toCapitalized();
   return '''abstract class ${nameCapitalized}Event {}
-
 class OnExampleTap extends ${nameCapitalized}Event {}
 ''';
 }
@@ -96,7 +94,6 @@ String createViewFile(String name) {
   return '''import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '$name.dart';
-
 class ${nameCapitalized}View extends StatelessWidget {
   const ${nameCapitalized}View({Key? key}) : super(key: key);
   @override
