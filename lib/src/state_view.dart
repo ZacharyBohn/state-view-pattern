@@ -37,6 +37,7 @@ class StateView<T extends StateProvider> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<T>(
       create: (context) => stateBuilder(context),
+      lazy: false,
       child: view,
     );
   }
