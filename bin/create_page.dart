@@ -19,7 +19,7 @@ void main(List<String> args) {
 
 Future<void> createPage(String name) async {
   // create files
-  var mainFile = await File('$name/$name.dart').create(recursive: true);
+  var mainFile = await File('$name/${name}_state.dart').create(recursive: true);
   var viewFile = await File('$name/${name}_view.dart').create(recursive: true);
   var eventsFile =
       await File('$name/${name}_events.dart').create(recursive: true);
@@ -59,12 +59,13 @@ extension StringCasingExtension on String {
 }
 
 String createPageFile(String name) {
-  String nameCapitalized = name.toCapitalized();
+  String nameCapitalized = getPascalCaseFromSnakeCase(name);
   return '''import 'package:flutter/material.dart';
 import 'package:state_view/state_view.dart';
 import '${name}_view.dart';
 import '${name}_events.dart';
 export '${name}_events.dart';
+
 class $nameCapitalized extends StateView<${nameCapitalized}State> {
   $nameCapitalized({Key? key})
       : super(
@@ -73,27 +74,31 @@ class $nameCapitalized extends StateView<${nameCapitalized}State> {
           view: ${nameCapitalized}View(),
         );
 }
+
 class ${nameCapitalized}State extends StateProvider<$nameCapitalized, ${nameCapitalized}Event> {
   ${nameCapitalized}State(super.context);
   @override
   void onEvent(${nameCapitalized}Event event) {
+    return;
   }
 }
 ''';
 }
 
 String createEventsFile(String name) {
-  String nameCapitalized = name.toCapitalized();
+  String nameCapitalized = getPascalCaseFromSnakeCase(name);
   return '''abstract class ${nameCapitalized}Event {}
+
 class OnExampleTap extends ${nameCapitalized}Event {}
 ''';
 }
 
 String createViewFile(String name) {
-  String nameCapitalized = name.toCapitalized();
+  String nameCapitalized = getPascalCaseFromSnakeCase(name);
   return '''import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '$name.dart';
+import '${name}_state.dart';
+
 class ${nameCapitalized}View extends StatelessWidget {
   const ${nameCapitalized}View({Key? key}) : super(key: key);
   @override
@@ -101,14 +106,26 @@ class ${nameCapitalized}View extends StatelessWidget {
     final state = context.watch<${nameCapitalized}State>();
     return Scaffold(
       body: Center(
-        child: Container(
-          color: Colors.blue,
-          width: 50,
-          height: 50,
-        ),
+        child: const Placeholder(),
       ),
     );
   }
 }
 ''';
+}
+
+String getPascalCaseFromSnakeCase(String name) {
+  List<String> words = name.split('_');
+
+  String pascalCase = '';
+  for (String word in words) {
+    if (word.isEmpty) continue;
+    if (word.length == 1) {
+      pascalCase += word[0].toUpperCase();
+      continue;
+    }
+    pascalCase += word[0].toUpperCase() + word.substring(1);
+  }
+
+  return pascalCase;
 }
