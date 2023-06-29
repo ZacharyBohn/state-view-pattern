@@ -1,12 +1,41 @@
 ## Overview
 
-State view is a package that provides a few widgets for following the state view pattern.  This is a pattern that strongly seperates app state from UI logic.
+State view is a package that provides a few widgets for following the state view pattern. This is a pattern that strongly seperates app state from UI logic.
+
+## Create page script
+
+This pattern necessitates a bit of boiler plate. In order to help with this, a script is available that will automatically create a folder and the necessary files when creating a new page.
+
+First, you must activate the script on your system:
+
+```zsh
+dart pub global activate state_view
+```
+
+Then, when in the folder that you wish to create the new page in (eg. /lib/pages/), then simply call the create page script and give the name of the page:
+
+```zsh
+create_page some_new_page
+```
+
+Snake case should be used for the page name in order to follow dart conventions. The create page script will automatically convert the actual class names to pascal case
+
+### Still not working?
+
+Make sure that you've added dart package executables to your path. This can be done on MacOS by adding the line
+
+```zsh
+export PATH = "$PATH:~/.pub-cache/bin"
+```
+
+to your `~/.zshrc` file. (This assumes that zsh is your default shell.)
 
 ## Examples
 
-When writing Flutter apps, it is easy to use a StatefulWidget to contain business logic, business state, and UI logic.  As a project gets larger, have files which are made of 1000's of lines of code becomes unwieldy.  This package provides a pattern of clean seperation between business logic / state and UI logic.
+When writing Flutter apps, it is easy to use a StatefulWidget to contain business logic, business state, and UI logic. As a project gets larger, have files which are made of 1000's of lines of code becomes unwieldy. This package provides a pattern of clean seperation between business logic / state and UI logic.
 
 There are 3 components to the state view pattern.
+
 - Page: a widget that glues the state and UI together
 - StateProvider: holds business logic and state / responds to UI events
 - UI: holds UI logic / emits UI events
@@ -35,13 +64,13 @@ class HomeState extends StateProvider<HomePage, HomeEvent> {
 abstract class HomeEvent {}
 ```
 
-This consists of a `HomePage` which merely glues together the state and UI.  This is the widget that will be navigated to.
-Next is `HomeState` which should hold business logic and business data.  It defines an `onEvent` function which should be its only public member alongside getters.  All UI widgets, when interacting with `HomeState` will exclusively use the `onEvent` function to do so.  This allows an interface of sorts to be defined between business logic and UI.  UI will therefore never mutate business state directly.  Instead of updating a variable directly on the state provider, UI will emit an event based on the UI interaction (ie OnSubmitButtonTapEvent) and call the state providers `onEvent` function (ie `state.onEvent(OnSubmitButtonTapEvent());`).  This will allow the `onEvent` function to be a high level definition for everything that the state provider can do, and it will define exactly when certain functions are called.  This greatly improves readability, especially as an app grows.
+This consists of a `HomePage` which merely glues together the state and UI. This is the widget that will be navigated to.
+Next is `HomeState` which should hold business logic and business data. It defines an `onEvent` function which should be its only public member alongside getters. All UI widgets, when interacting with `HomeState` will exclusively use the `onEvent` function to do so. This allows an interface of sorts to be defined between business logic and UI. UI will therefore never mutate business state directly. Instead of updating a variable directly on the state provider, UI will emit an event based on the UI interaction (ie OnSubmitButtonTapEvent) and call the state providers `onEvent` function (ie `state.onEvent(OnSubmitButtonTapEvent());`). This will allow the `onEvent` function to be a high level definition for everything that the state provider can do, and it will define exactly when certain functions are called. This greatly improves readability, especially as an app grows.
 Finally, the `HomeView` can be any widget (usually a stateless widget) that will read values from `HomeState` and emit events to it.
 
 ## Events
 
-The `HomeState.onEvent` function is typed.  An abstract class should be defined for each `StateProvider` that is created.  This allows an interface to be constructed between the UI and the state provider.  Each event that the UI is able to emit, should be defined as a class that extends the abstract event.  Then, if any data needs to be defined in the event, it can then be placed in one of the event classes.  Let's look at an example:
+The `HomeState.onEvent` function is typed. An abstract class should be defined for each `StateProvider` that is created. This allows an interface to be constructed between the UI and the state provider. Each event that the UI is able to emit, should be defined as a class that extends the abstract event. Then, if any data needs to be defined in the event, it can then be placed in one of the event classes. Let's look at an example:
 
 ```dart
 abstract class HomeEvent {}
@@ -84,10 +113,9 @@ class HomeView extends StatelessWidget {
 }
 ```
 
-Here `HomeState` can be accessed using `context.read<SomeStateProviderHere>()`.  If `HomeView` needed to be rebuilt whenever `HomeState` notified its listeners, then `context.watch<SomeStateProviderHere>()` could be used.
+Here `HomeState` can be accessed using `context.read<SomeStateProviderHere>()`. If `HomeView` needed to be rebuilt whenever `HomeState` notified its listeners, then `context.watch<SomeStateProviderHere>()` could be used.
 
 Let's look at one final sample that ties everything together as well as introduces the emitters if we need the `StateProvider` to respond to another `StateProvider` higher in the widget tree.
-
 
 ```dart
 
