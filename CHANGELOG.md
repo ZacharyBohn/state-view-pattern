@@ -1,15 +1,19 @@
+## 0.0.7
+
+- Fixes a bug where state does not always instantiate
+
 ## 0.0.6
 
-* Bug fixes
+- Bug fixes
 
 ## 0.0.5
 
-* Adds example and description
+- Adds example and description
 
 ## 0.0.4
 
-* Adds create script
+- Adds create script
 
 ## 0.0.1
 
-* Initial release
+- Initial release
