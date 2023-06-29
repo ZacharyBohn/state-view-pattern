@@ -54,7 +54,9 @@ abstract class StateProvider<W extends StatelessWidget, E>
     }
     W? ancestor = context.findAncestorWidgetOfExactType<W>();
     if (ancestor == null) {
-      throw Exception('No ancestor of type $W found for $runtimeType');
+      throw Exception('No ancestor of type $W found for $runtimeType\n'
+          'Make sure that you are following the pattern of StateProvider<Page, Event>()\n'
+          'And not using StateProvider<View, Event>()');
     }
     widget = ancestor;
     return;
