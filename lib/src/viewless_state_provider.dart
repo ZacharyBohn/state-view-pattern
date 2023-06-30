@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'viewless_state_provider.dart';
 
 /// A wrapper around change notifier that enables the use of
-/// the state view pattern.  It provides an onEvent function
-/// to accept events from the UI, a map of emitters which will
+/// the state view pattern.  It provides an onEvent function,
+/// a map of emitters which will
 /// allow you to tie a change notifier higher in the widget to
 /// an event to be emitted on this provider.
+///
+/// This is very similiar to the StateProvider except this
+/// class can be used in a [MultiProvider]
 ///
 ///
 /// Example:
 ///
-/// class HomeState extends StateProvider<Home, HomeEvent> {
+/// class HomeState extends ViewlessStateProvider<HomeEvent> {
 ///   HomeState(super.context);
 ///
 ///   @override
@@ -22,7 +24,7 @@ import 'viewless_state_provider.dart';
 ///
 /// OR
 ///
-/// class HomeState extends StateProvider<Home, HomeEvent> {
+/// class HomeState extends ViewlessStateProvider<HomeEvent> {
 ///   HomeState(super.context)
 ///       : super(
 ///           emitters: {
@@ -35,21 +37,13 @@ import 'viewless_state_provider.dart';
 ///     return;
 ///   }
 /// }
-///
-/// This class cannot be used in a [MultiProvider].
-/// Use [ViewlessStateProvider] instead.
-///
-abstract class StateProvider<W extends StatefulWidget, E>
-    extends ChangeNotifier {
+abstract class ViewlessStateProvider<E> extends ChangeNotifier {
   final BuildContext context;
-  late W widget;
   final Map<ChangeNotifier, void Function()> _listenToCallbacks = {};
   Map<ChangeNotifier, E> emitters;
-  void Function()? onDependenciesChanged;
-  StateProvider(
+  ViewlessStateProvider(
     this.context, {
     this.emitters = const {},
-    this.onDependenciesChanged,
   }) : super() {
     assert(E.runtimeType != dynamic, 'Specify a base event class');
     for (MapEntry entry in emitters.entries) {
@@ -60,26 +54,6 @@ abstract class StateProvider<W extends StatefulWidget, E>
       _listenToCallbacks[provider] = callback;
       provider.addListener(callback);
     }
-    _updateWidgetReference();
-    return;
-  }
-
-  /// This method is called by the state_view package in order
-  /// to update widget reference and call onDependenciesChanged()
-  void dependenciesDidChange() {
-    _updateWidgetReference();
-    onDependenciesChanged?.call();
-    return;
-  }
-
-  void _updateWidgetReference() {
-    W? ancestor = context.findAncestorWidgetOfExactType<W>();
-    if (ancestor == null) {
-      throw Exception('No ancestor of type $W found for $runtimeType\n'
-          'Make sure that you are following the pattern of StateProvider<Page, Event>()\n'
-          'And not using StateProvider<View, Event>()');
-    }
-    widget = ancestor;
     return;
   }
 
