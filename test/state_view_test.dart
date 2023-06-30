@@ -36,4 +36,15 @@ void main() {
     // TODO: implement
     return;
   });
+  testWidgets('onDependenciesChanged is called when depenencies change',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: DependenciesChangeExampleHolder()),
+    );
+    expect(find.text('init'), findsOneWidget);
+    await tester.tap(find.byType(DependenciesChangeExampleButton));
+    await tester.pumpAndSettle();
+    expect(find.text('new-value'), findsOneWidget);
+    return;
+  });
 }

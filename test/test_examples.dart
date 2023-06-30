@@ -75,3 +75,93 @@ class SettingsPage extends StateView {
           view: Container(),
         );
 }
+
+class DependenciesChangeExampleHolder extends StatefulWidget {
+  const DependenciesChangeExampleHolder({super.key});
+
+  @override
+  State<DependenciesChangeExampleHolder> createState() =>
+      _DependenciesChangeExampleHolderState();
+}
+
+class _DependenciesChangeExampleHolderState
+    extends State<DependenciesChangeExampleHolder> {
+  String value = 'init';
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        DependenciesChangeExampleButton(
+          () {
+            setState(() {
+              value = 'new-value';
+            });
+          },
+        ),
+        DependenciesChangedExample(value: value),
+      ],
+    );
+  }
+}
+
+class DependenciesChangeExampleButton extends StatelessWidget {
+  final void Function() onTap;
+  const DependenciesChangeExampleButton(this.onTap, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onTap,
+      child: const Text('Change Value'),
+    );
+  }
+}
+
+class DependenciesChangedExample
+    extends StateView<DependenciesChangedExampleState> {
+  final String value;
+  DependenciesChangedExample({Key? key, required this.value})
+      : super(
+          key: key,
+          stateBuilder: (context) => DependenciesChangedExampleState(context),
+          view: const DependenciesChangedExampleView(),
+        );
+}
+
+class DependenciesChangedExampleState extends StateProvider<
+    DependenciesChangedExample, DependenciesChangedExampleEvent> {
+  DependenciesChangedExampleState(super.context) {
+    value = widget.value;
+    onDependenciesChanged = () {
+      onEvent(OnValueUpdated());
+    };
+    return;
+  }
+
+  late String value;
+
+  @override
+  void onEvent(DependenciesChangedExampleEvent event) {
+    if (event is OnValueUpdated) {
+      value = widget.value;
+      notifyListeners();
+    }
+    return;
+  }
+}
+
+abstract class DependenciesChangedExampleEvent {}
+
+class OnValueUpdated extends DependenciesChangedExampleEvent {}
+
+class DependenciesChangedExampleView extends StatelessWidget {
+  const DependenciesChangedExampleView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<DependenciesChangedExampleState>();
+    return Center(
+      child: Text(state.value),
+    );
+  }
+}
