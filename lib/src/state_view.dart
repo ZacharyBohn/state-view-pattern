@@ -17,7 +17,7 @@ import 'state_provider.dart';
 ///          view: Container(),
 ///        );
 /// }
-class StateView<T extends StateProvider> extends StatelessWidget {
+class StateView<T extends StateProvider> extends StatefulWidget {
   final T Function(BuildContext) stateBuilder;
   final Widget view;
   StateView({
@@ -26,7 +26,7 @@ class StateView<T extends StateProvider> extends StatelessWidget {
     required this.view,
   }) : super(key: key) {
     assert(
-      T.toString() != 'StateProvider<StatelessWidget, dynamic>',
+      T.toString() != 'StateProvider<StatefulWidget, dynamic>',
       'Must specify a type.  '
       'Eg. class HomePage extends StateView<HomeState> {}  '
       'instead of class HomePage extends StateView {}',
@@ -34,11 +34,22 @@ class StateView<T extends StateProvider> extends StatelessWidget {
   }
 
   @override
+  State<StateView<T>> createState() => _StateViewState<T>();
+}
+
+class _StateViewState<T extends StateProvider> extends State<StateView<T>> {
+  T? state;
+
+  @override
   Widget build(BuildContext context) {
+    state?.dependenciesDidChange();
     return ChangeNotifierProvider<T>(
-      create: (context) => stateBuilder(context),
+      create: (context) {
+        state = widget.stateBuilder(context);
+        return state!;
+      },
       lazy: false,
-      child: view,
+      child: widget.view,
     );
   }
 }

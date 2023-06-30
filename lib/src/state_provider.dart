@@ -33,15 +33,17 @@ import 'package:flutter/material.dart';
 ///     return;
 ///   }
 /// }
-abstract class StateProvider<W extends StatelessWidget, E>
+abstract class StateProvider<W extends StatefulWidget, E>
     extends ChangeNotifier {
   final BuildContext context;
   late W widget;
   final Map<ChangeNotifier, void Function()> _listenToCallbacks = {};
   Map<ChangeNotifier, E> emitters;
+  void Function()? onDependenciesChanged;
   StateProvider(
     this.context, {
     this.emitters = const {},
+    this.onDependenciesChanged,
   }) : super() {
     assert(E.runtimeType != dynamic, 'Specify a base event class');
     for (MapEntry entry in emitters.entries) {
@@ -52,6 +54,19 @@ abstract class StateProvider<W extends StatelessWidget, E>
       _listenToCallbacks[provider] = callback;
       provider.addListener(callback);
     }
+    _updateWidgetReference();
+    return;
+  }
+
+  /// This method is called by the state_view package in order
+  /// to update widget reference and call onDependenciesChanged()
+  void dependenciesDidChange() {
+    _updateWidgetReference();
+    onDependenciesChanged?.call();
+    return;
+  }
+
+  void _updateWidgetReference() {
     W? ancestor = context.findAncestorWidgetOfExactType<W>();
     if (ancestor == null) {
       throw Exception('No ancestor of type $W found for $runtimeType\n'
