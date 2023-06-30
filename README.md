@@ -215,3 +215,7 @@ class HomeView extends StatelessWidget {
   }
 }
 ```
+
+## MultiProvider
+
+The `StateProvider` widget cannot be used in a `MultiProvider` since it expect a view widget. However, you can use the `ViewlessStateProvider` which is an almost exact copy, except that it can be used in a `MultiProvider`.
