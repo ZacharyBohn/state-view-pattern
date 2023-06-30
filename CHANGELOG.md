@@ -1,3 +1,8 @@
+## 0.0.9
+
+- Adds a ViewlessStateProvider
+- Implements a onDependenciesChanged for StateProvider
+
 ## 0.0.8
 
 - Fixes spacing and pascal case for classes on create page script
