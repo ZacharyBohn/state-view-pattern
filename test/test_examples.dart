@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, avoid_unnecessary_containers, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:state_view/state_view.dart';
@@ -162,6 +164,73 @@ class DependenciesChangedExampleView extends StatelessWidget {
     final state = context.watch<DependenciesChangedExampleState>();
     return Center(
       child: Text(state.value),
+    );
+  }
+}
+
+class RegisterHandlerPage extends StateView<RegisterHandlerState> {
+  RegisterHandlerPage({
+    super.key,
+  }) : super(
+          stateBuilder: (context) => RegisterHandlerState(context),
+          view: RegisterHandlerView(),
+        );
+}
+
+class RegisterHandlerState
+    extends StateProvider<RegisterHandlerPage, RegisterHandlerEvent> {
+  RegisterHandlerState(super.context) {
+    registerHandler<OnTap>(_onTapHandler);
+    registerHandler<OnTap2>(_onTap2Handler);
+    return;
+  }
+
+  String value = 'Tap Here';
+  String value2 = 'Value 2';
+
+  void _onTapHandler(OnTap event) {
+    value = 'Tapped';
+    notifyListeners();
+    return;
+  }
+
+  // should not be called during test
+  void _onTap2Handler(OnTap2 event) {
+    value2 = 'Removed';
+    notifyListeners();
+    return;
+  }
+}
+
+abstract class RegisterHandlerEvent {}
+
+class OnTap extends RegisterHandlerEvent {}
+
+class OnTap2 extends RegisterHandlerEvent {}
+
+class RegisterHandlerView extends StatelessWidget {
+  RegisterHandlerView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<RegisterHandlerState>();
+    return Scaffold(
+      body: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              state.emit(OnTap());
+            },
+            child: Text(state.value),
+          ),
+          GestureDetector(
+            onTap: () {
+              state.emit(OnTap2());
+            },
+            child: Text(state.value2),
+          ),
+        ],
+      ),
     );
   }
 }

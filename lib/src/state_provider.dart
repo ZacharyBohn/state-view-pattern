@@ -11,6 +11,7 @@ import 'viewless_state_provider.dart';
 ///
 /// Example:
 ///
+/// ```dart
 /// class HomeState extends StateProvider<Home, HomeEvent> {
 ///   HomeState(super.context);
 ///
@@ -19,9 +20,11 @@ import 'viewless_state_provider.dart';
 ///     return;
 ///   }
 /// }
+/// ```
 ///
 /// OR
 ///
+/// ```dart
 /// class HomeState extends StateProvider<Home, HomeEvent> {
 ///   HomeState(super.context)
 ///       : super(
@@ -35,6 +38,7 @@ import 'viewless_state_provider.dart';
 ///     return;
 ///   }
 /// }
+/// ```
 ///
 /// This class cannot be used in a [MultiProvider].
 /// Use [ViewlessStateProvider] instead.
@@ -83,7 +87,44 @@ abstract class StateProvider<W extends StatefulWidget, E>
     return;
   }
 
-  void onEvent(E event);
+  /// Sends an event to this state provider.  This function
+  /// must be overriden and events must be handled in the
+  /// implementation.  Alternatively, use [registerHandler]
+  /// and [emit].  [registerHandler] and [emit] are part of
+  /// the recommend pattern
+  void onEvent(E event) {}
+
+  // String key is created from Event.toString()
+  // or event.runtimeType.toString()
+  final Map<String, List<Function>> _handlers = {};
+
+  /// Registers a handler function that will be called whenever
+  /// the associated event is emitted using [emit].
+  /// This is an alternative to [onEvent]
+  void registerHandler<EE extends E>(Function(EE) handler) {
+    var key = EE.toString();
+    if (key == 'dynamic') {
+      throw Exception('Must specify a type when registering a handler.\n'
+          'Example: registerHandler<OnTapLogout>(_logoutHandler)');
+    }
+    _handlers.putIfAbsent(key, () => []);
+    _handlers[key]!.add(handler);
+    return;
+  }
+
+  /// Used to emit an event, which is then sent to
+  /// a handler function that was registered using
+  /// [registerHandler]
+  void emit(E event) {
+    var key = event.runtimeType.toString();
+    if (!_handlers.containsKey(key) || _handlers[key]!.isEmpty) {
+      throw Exception('No handlers are registered for event: $E');
+    }
+    for (var handler in _handlers[key]!) {
+      handler(event);
+    }
+    return;
+  }
 
   bool get mounted => _mounted;
   bool _mounted = true;

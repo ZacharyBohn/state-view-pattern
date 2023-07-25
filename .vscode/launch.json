@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Widget Tests",
+        "request": "launch",
+        "type": "dart",
+        "program": "test/state_view_test.dart",
+      }
+    ]
+}

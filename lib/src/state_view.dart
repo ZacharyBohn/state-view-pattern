@@ -9,6 +9,7 @@ import 'state_provider.dart';
 ///
 /// Example:
 ///
+/// ```dart
 /// class Home extends StateView<HomeState> {
 ///  Home({Key? key})
 ///      : super(
@@ -17,6 +18,7 @@ import 'state_provider.dart';
 ///          view: Container(),
 ///        );
 /// }
+/// ```
 class StateView<T extends StateProvider> extends StatefulWidget {
   final T Function(BuildContext) stateBuilder;
   final Widget view;
