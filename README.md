@@ -1,76 +1,94 @@
-## Overview
+# State View Package
 
-State view is a package that provides a few widgets for following the state view pattern. This is a pattern that strongly seperates app state from UI logic.
+State View is a Dart package that offers a set of widgets and patterns for implementing the state view pattern in Flutter apps. This pattern aims to separate the application state from UI logic, making code organization cleaner and more maintainable.
 
-## Create page script
+## Installation
 
-This pattern necessitates a bit of boiler plate. In order to help with this, a script is available that will automatically create a folder and the necessary files when creating a new page.
+To use the State View package, you first need to add the package to your Flutter project:
 
-First, you must activate the script on your system:
+```bash
+dart pub add state_view
+```
+
+### Install Create Page Script
+
+To use the State View package's create page scrpit, you first need to activate the script on your system. Open your terminal and run the following command:
 
 ```zsh
 dart pub global activate state_view
 ```
 
-Then, when in the folder that you wish to create the new page in (eg. /lib/pages/), then simply call the create page script and give the name of the page:
+Make sure to add Dart package executables to your system path. On MacOS / Linux, you can achieve this by adding the following line to your ~/.zshrc file (assuming zsh is the default shell):
+
+```zsh
+export PATH="$PATH:~/.pub-cache/bin"
+```
+
+On Windows you can achieve this by adding this to your user's PATH environment variable:
+
+```cmd
+%LOCALAPPDATA%\Pub\Cache\bin
+```
+
+## Creating a Page
+
+The state view pattern requires a certain amount of boilerplate code. To streamline this process, the package provides a script that automatically creates the necessary files and folders for a new page.
+
+To create a new page, navigate to the folder where you want to create it (e.g., /lib/pages/) and run the script, providing the name of the page in snake case:
 
 ```zsh
 create_page some_new_page
 ```
 
-Snake case should be used for the page name in order to follow dart conventions. The create page script will automatically convert the actual class names to pascal case
-
-### Still not working?
-
-Make sure that you've added dart package executables to your path. This can be done on MacOS by adding the line
-
-```zsh
-export PATH = "$PATH:~/.pub-cache/bin"
-```
-
-to your `~/.zshrc` file. (This assumes that zsh is your default shell.)
+The script will automatically convert the page name to Pascal case for the actual class names.
 
 ## Examples
 
-When writing Flutter apps, it is easy to use a StatefulWidget to contain business logic, business state, and UI logic. As a project gets larger, have files which are made of 1000's of lines of code becomes unwieldy. This package provides a pattern of clean seperation between business logic / state and UI logic.
+As Flutter apps grow, using a StatefulWidget for managing business logic, state, and UI logic in a single file can become unwieldy. The State View package addresses this by offering a clean separation between business logic/state and UI logic.
 
-There are 3 components to the state view pattern.
+There are three main components to the state view pattern:
 
-- Page: a widget that glues the state and UI together
-- StateProvider: holds business logic and state / responds to UI events
-- UI: holds UI logic / emits UI events
+-   Page: A widget that glues the state and UI together.
+-   StateProvider: Holds business logic and state, and responds to UI events.
+-   UI: Holds UI logic and emits UI events.
 
-Let's look at some examples:
+### Code Example
+
+Let's see an example of how to use these components:
 
 ```dart
 class HomePage extends StateView<HomeState> {
   HomePage({Key? key})
-      : super(
-          key: key,
-          stateBuilder: (context) => HomeState(context),
-          view: HomeView(),
-        );
+    : super(
+      key: key,
+      stateBuilder: (context) => HomeState(context),
+      view: HomeView(),
+  );
 }
 
 class HomeState extends StateProvider<HomePage, HomeEvent> {
-  HomeState(super.context);
-
-  @override
-  void onEvent(HomeEvent event) {
+  HomeState(super.context) {
+    registerHandler<OnSaveButtonTap>(_handleLogin);
     return;
+  }
+
+  void _handleSave(OnSaveButtonTap event) {
+    // TODO: handle login
   }
 }
 
 abstract class HomeEvent {}
+
+class OnSaveButtonTap extends HomeEvent {}
 ```
 
-This consists of a `HomePage` which merely glues together the state and UI. This is the widget that will be navigated to.
-Next is `HomeState` which should hold business logic and business data. It defines an `onEvent` function which should be its only public member alongside getters. All UI widgets, when interacting with `HomeState` will exclusively use the `onEvent` function to do so. This allows an interface of sorts to be defined between business logic and UI. UI will therefore never mutate business state directly. Instead of updating a variable directly on the state provider, UI will emit an event based on the UI interaction (ie OnSubmitButtonTapEvent) and call the state providers `onEvent` function (ie `state.onEvent(OnSubmitButtonTapEvent());`). This will allow the `onEvent` function to be a high level definition for everything that the state provider can do, and it will define exactly when certain functions are called. This greatly improves readability, especially as an app grows.
-Finally, the `HomeView` can be any widget (usually a stateless widget) that will read values from `HomeState` and emit events to it.
+In this example, HomePage acts as the glue between HomeState (business logic) and HomeView (UI). HomeState registers one or more handlers for each event, which serves as an interface between the business logic and UI. UI widgets would interact with HomeState by calling emit and emitting specific events. This separation enhances readability and maintainability as the app scales.
 
 ## Events
 
-The `HomeState.onEvent` function is typed. An abstract class should be defined for each `StateProvider` that is created. This allows an interface to be constructed between the UI and the state provider. Each event that the UI is able to emit, should be defined as a class that extends the abstract event. Then, if any data needs to be defined in the event, it can then be placed in one of the event classes. Let's look at an example:
+To keep the HomeState.emit function typed, it's recommended to define an abstract class for each StateProvider you create. Each UI event should be represented as a class extending this abstract event class. You can also include any necessary data in these event classes.
+
+For example:
 
 ```dart
 abstract class HomeEvent {}
@@ -83,7 +101,7 @@ class OnUserNameChanged extends HomeEvent {
 }
 ```
 
-Now that the events are defined, let's look at how the UI would use them:
+Here's how the UI would use these events:
 
 ```dart
 class HomeView extends StatelessWidget {
@@ -97,13 +115,13 @@ class HomeView extends StatelessWidget {
         children: [
           TextField(
             onChanged: (String value) {
-              state.onEvent(OnUserNameChanged(value));
+              state.emit(OnUserNameChanged(value));
             },
           ),
           TextButton(
             child: Text('Save'),
             onPressed: () {
-              state.onEvent(OnSaveButtonTap());
+              state.emit(OnSaveButtonTap());
             },
           ),
         ],
@@ -113,109 +131,40 @@ class HomeView extends StatelessWidget {
 }
 ```
 
-Here `HomeState` can be accessed using `context.read<SomeStateProviderHere>()`. If `HomeView` needed to be rebuilt whenever `HomeState` notified its listeners, then `context.watch<SomeStateProviderHere>()` could be used.
+### onEvent
 
-Let's look at one final sample that ties everything together as well as introduces the emitters if we need the `StateProvider` to respond to another `StateProvider` higher in the widget tree.
+Alternatively, you can override the onEvent function in the state provider, and just call onEvent to provide events to the state provider.
+
+Here's an example:
 
 ```dart
-
-class HomePage extends StateView<HomeState> {
-  final String initialUsername;
-  HomePage({
-    Key? key,
-    required this.initialUsername,
-  }) : super(
-          key: key,
-          stateBuilder: (context) => HomeState(context),
-          view: HomeView(),
-        );
-}
-
 class HomeState extends StateProvider<HomePage, HomeEvent> {
-  HomeState(BuildContext context)
-      : super(
-          context,
-          // if AuthProvider was a ChangeNotifier or StateProvider
-          // higher in the widget tree, then whenever it notifies
-          // its listeners, then the OnAuthUpdated event will be
-          // emitted on this class
-          emitters: {
-            context.read<AuthProvider>(): OnAuthUpdated(),
-          },
-        ) {
-    // the `widget` variable can be used to access variables
-    // defined on the HomePage class.  This is just to avoid
-    // having to define parameters multiple times.
-    _username = widget.initialUsername;
-  }
-
-  late String _username;
-  String get username => _username;
+  HomeState(super.context);
 
   @override
-  void onEvent(HomeEvent event) {
-    // check which event was emitted and define
-    // handlers for each event
-    if (event is OnUserNameChanged) {
-        // accessing event variables
-      _username = event.newUsername;
-      notifyListeners();
-    }
+  void onEvent() {
     if (event is OnSaveButtonTap) {
-      // send username to database
-    }
-    if (event is OnAuthUpdated) {
-      // respond to auth event
+      _handleSave(event);
     }
     return;
   }
-}
 
-// base event define for HomeState typing
-abstract class HomeEvent {}
-
-class OnSaveButtonTap extends HomeEvent {}
-
-class OnUserNameChanged extends HomeEvent {
-  final String newUsername;
-  OnUserNameChanged(this.newUsername);
-}
-
-class OnAuthUpdated extends HomeEvent {}
-
-/// This would start a new file: home_view.dart
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // watch is used instead of read so that this widget
-    // will rebuild when HomeState notifies listeners
-    final state = context.watch<HomeState>();
-    return Scaffold(
-      body: Column(
-        children: [
-          Text('Current username: ${state.username}'),
-          TextField(
-            onChanged: (String value) {
-                // emitting a UI event with a value
-              state.onEvent(OnUserNameChanged(value));
-            },
-          ),
-          TextButton(
-            child: Text('Save'),
-            onPressed: () {
-                // emitting a UI event
-              state.onEvent(OnSaveButtonTap());
-            },
-          ),
-        ],
-      ),
-    );
+  void _handleSave(OnSaveButtonTap event) {
+    // TODO: handle login
   }
 }
 ```
 
+Then, from the UI you would call:
+
+```dart
+context.read<HomeState>().onEvent(OnSaveButtonTap());
+```
+
+This is an older method to emit events, and is not recommended since extra logic tends to be added to the onEvent function, aside from just asigning handlers. But this is functionally the same as the registerHandler / emit pattern.
+
 ## MultiProvider
 
-The `StateProvider` widget cannot be used in a `MultiProvider` since it expect a view widget. However, you can use the `ViewlessStateProvider` which is an almost exact copy, except that it can be used in a `MultiProvider`.
+The StateProvider widget cannot be used directly within a MultiProvider. However, you can use the ViewlessStateProvider, which is nearly identical but can be used in a MultiProvider.
+
+Note: The rest of the documentation contains additional examples and explanations of how to use the State View package effectively. For further details, please refer to the actual package files.
