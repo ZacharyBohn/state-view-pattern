@@ -47,4 +47,15 @@ void main() {
     expect(find.text('new-value'), findsOneWidget);
     return;
   });
+  testWidgets('registerHandler and emit event', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: RegisterHandlerPage()),
+    );
+    expect(find.text('Tap Here'), findsOneWidget);
+    await tester.tap(find.text('Tap Here'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tapped'), findsOneWidget);
+    expect(find.text('Value 2'), findsOneWidget);
+    return;
+  });
 }
