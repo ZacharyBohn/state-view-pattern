@@ -11,12 +11,14 @@ extension Listen on BuildContext {
   ///
   /// Example:
   ///
+  /// ```dart
   /// context.select<HomeState>(
   ///   (HomeState state) => [
   ///     state.someValue,
   ///     state.someOtherValue,
   ///   ]
   /// );
+  /// ```
   ///
   /// Note:
   /// Custom classes will need to override their hashcode function in order
