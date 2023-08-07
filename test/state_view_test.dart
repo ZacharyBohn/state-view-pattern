@@ -36,7 +36,7 @@ void main() {
     // TODO: implement
     return;
   });
-  testWidgets('onDependenciesChanged is called when depenencies change',
+  testWidgets('onDependenciesChanged is called when dependencies change',
       (tester) async {
     await tester.pumpWidget(
       const MaterialApp(home: DependenciesChangeExampleHolder()),

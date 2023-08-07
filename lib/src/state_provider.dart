@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'viewless_state_provider.dart';
 
 /// A wrapper around change notifier that enables the use of
-/// the state view pattern.  It provides an onEvent function
+/// the state view pattern.  It provides an emit function
 /// to accept events from the UI, a map of emitters which will
 /// allow you to tie a change notifier higher in the widget to
 /// an event to be emitted on this provider.
@@ -13,11 +13,13 @@ import 'viewless_state_provider.dart';
 ///
 /// ```dart
 /// class HomeState extends StateProvider<Home, HomeEvent> {
-///   HomeState(super.context);
-///
-///   @override
-///   void onEvent(HomeEvent event) {
+///   HomeState(super.context) {
+///     registerHandler<OnExampleTap>(_handler);
 ///     return;
+///   }
+///
+///   void _handler(OnExampleTap event) {
+///     // handle event
 ///   }
 /// }
 /// ```
@@ -31,11 +33,12 @@ import 'viewless_state_provider.dart';
 ///           emitters: {
 ///             context.read<AuthProvider>(): AuthProviderUpdatedEvent(),
 ///           },
-///         );
+///         ) {
+///     registerHandler<OnExampleTap>(_handler);
+///   }
 ///
-///   @override
-///   void onEvent(HomeEvent event) {
-///     return;
+///   void _handler(OnExampleTap event) {
+///     // handle event
 ///   }
 /// }
 /// ```
@@ -88,10 +91,10 @@ abstract class StateProvider<W extends StatefulWidget, E>
   }
 
   /// Sends an event to this state provider.  This function
-  /// must be overriden and events must be handled in the
+  /// must be overridden and events must be handled in the
   /// implementation.  Alternatively, use [registerHandler]
-  /// and [emit].  [registerHandler] and [emit] are part of
-  /// the recommend pattern
+  /// and [emit].  [registerHandler] and [emit] are
+  /// recommended.
   void onEvent(E event) {}
 
   // String key is created from Event.toString()
@@ -100,7 +103,9 @@ abstract class StateProvider<W extends StatefulWidget, E>
 
   /// Registers a handler function that will be called whenever
   /// the associated event is emitted using [emit].
-  /// This is an alternative to [onEvent]
+  /// This is an alternative to [onEvent].
+  /// Multiple handlers can be defined for the same event.  They
+  /// will be called in the order in which they were registered.
   void registerHandler<EE extends E>(Function(EE) handler) {
     var key = EE.toString();
     if (key == 'dynamic') {
