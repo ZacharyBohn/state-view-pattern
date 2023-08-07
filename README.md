@@ -12,7 +12,7 @@ dart pub add state_view
 
 ### Install Create Page Script
 
-To use the State View package's create page scrpit, you first need to activate the script on your system. Open your terminal and run the following command:
+To use the State View package's create page script, you first need to activate the script on your system. Open your terminal and run the following command:
 
 ```zsh
 dart pub global activate state_view
@@ -68,12 +68,12 @@ class HomePage extends StateView<HomeState> {
 
 class HomeState extends StateProvider<HomePage, HomeEvent> {
   HomeState(super.context) {
-    registerHandler<OnSaveButtonTap>(_handleLogin);
+    registerHandler<OnSaveButtonTap>(_handleSave);
     return;
   }
 
   void _handleSave(OnSaveButtonTap event) {
-    // TODO: handle login
+    // TODO: handle save logic
   }
 }
 
@@ -150,7 +150,7 @@ class HomeState extends StateProvider<HomePage, HomeEvent> {
   }
 
   void _handleSave(OnSaveButtonTap event) {
-    // TODO: handle login
+    // TODO: handle save logic
   }
 }
 ```
@@ -161,7 +161,7 @@ Then, from the UI you would call:
 context.read<HomeState>().onEvent(OnSaveButtonTap());
 ```
 
-This is an older method to emit events, and is not recommended since extra logic tends to be added to the onEvent function, aside from just asigning handlers. But this is functionally the same as the registerHandler / emit pattern.
+This is an older method to emit events, and is not recommended since extra logic tends to be added to the onEvent function, aside from just assigning handlers. But this is functionally the same as the registerHandler / emit pattern.
 
 ## MultiProvider
 

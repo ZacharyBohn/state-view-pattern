@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, unnecessary_brace_in_string_interps
+
 void main() {
   var x = Test();
   x.test();

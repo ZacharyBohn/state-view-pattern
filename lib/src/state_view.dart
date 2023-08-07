@@ -5,7 +5,7 @@ import 'state_provider.dart';
 
 /// A widget used to build pages.  It will tie together a
 /// view widget with a [StateProvider] widget in order to
-/// seperate out state logic and UI logic.
+/// separate out state logic and UI logic.
 ///
 /// Example:
 ///
