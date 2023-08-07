@@ -1,3 +1,7 @@
+## 0.1.1
+
+-   Cleans up misspelled words / comments
+
 ## 0.1.0
 
 -   Adds registerHandler / emit as an alternative to onEvent
