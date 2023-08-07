@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 /// Example:
 ///
 /// ```dart
-/// class HomeState extends StateProvider<HomeEvent> {
+/// class HomeState extends ViewlessStateProvider<HomeEvent> {
 ///   HomeState(super.context) {
 ///     registerHandler<OnExampleTap>(_handler);
 ///     return;
@@ -29,7 +29,7 @@ import 'package:provider/provider.dart';
 /// OR
 ///
 /// ```dart
-/// class HomeState extends StateProvider<HomeEvent> {
+/// class HomeState extends ViewlessStateProvider<HomeEvent> {
 ///   HomeState(super.context)
 ///       : super(
 ///           emitters: {
