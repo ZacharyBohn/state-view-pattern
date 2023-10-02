@@ -1,3 +1,7 @@
+## 0.1.2
+
+-   Exports the viewless state provider
+
 ## 0.1.1
 
 -   Cleans up misspelled words / comments
