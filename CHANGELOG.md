@@ -1,3 +1,7 @@
+## 0.1.3
+
+-   Bumps dependency versions
+
 ## 0.1.2
 
 -   Exports the viewless state provider

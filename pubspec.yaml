@@ -1,7 +1,7 @@
 name: state_view
 description: Provides the state view pattern for Flutter, creating a strong separation between UI and domain logic.
 repository: https://github.com/ZacharyBohn/state-view-pattern
-version: 0.1.2
+version: 0.1.3
 
 environment:
     sdk: '>=2.18.4 <4.0.0'
@@ -16,7 +16,7 @@ dependencies:
 dev_dependencies:
     flutter_test:
         sdk: flutter
-    flutter_lints: ^2.0.0
+    flutter_lints: ^6.0.0
 
 flutter:
 
