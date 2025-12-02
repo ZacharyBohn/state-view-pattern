@@ -60,8 +60,7 @@ extension StringCasingExtension on String {
 
 String createPageFile(String name) {
   String nameCapitalized = getPascalCaseFromSnakeCase(name);
-  return '''import 'package:flutter/material.dart';
-import 'package:state_view/state_view.dart';
+  return '''import 'package:state_view/state_view.dart';
 import '${name}_view.dart';
 import '${name}_events.dart';
 export '${name}_events.dart';
@@ -76,10 +75,12 @@ class $nameCapitalized extends StateView<${nameCapitalized}State> {
 }
 
 class ${nameCapitalized}State extends StateProvider<$nameCapitalized, ${nameCapitalized}Event> {
-  ${nameCapitalized}State(super.context);
-  @override
-  void onEvent(${nameCapitalized}Event event) {
-    return;
+  ${nameCapitalized}State(super.context) {
+    registerHandler<OnExampleTap>(_handleExampleTap);
+  }
+
+  void _handleExampleTap(OnExampleTap event) {
+    // TODO: handle example tap logic
   }
 }
 ''';
