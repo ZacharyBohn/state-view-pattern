@@ -67,9 +67,9 @@ import '${name}_events.dart';
 export '${name}_events.dart';
 
 class $nameCapitalized extends StateView<${nameCapitalized}State> {
-  $nameCapitalized({Key? key})
-      : super(
-          key: key,
+  $nameCapitalized({
+    super.key,
+  }) : super(
           stateBuilder: (context) => ${nameCapitalized}State(context),
           view: ${nameCapitalized}View(),
         );
@@ -100,7 +100,7 @@ import 'package:provider/provider.dart';
 import '${name}_state.dart';
 
 class ${nameCapitalized}View extends StatelessWidget {
-  const ${nameCapitalized}View({Key? key}) : super(key: key);
+  const ${nameCapitalized}View({super.key});
   @override
   Widget build(BuildContext context) {
     final state = context.watch<${nameCapitalized}State>();
