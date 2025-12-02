@@ -60,26 +60,27 @@ extension StringCasingExtension on String {
 
 String createPageFile(String name) {
   String nameCapitalized = getPascalCaseFromSnakeCase(name);
-  return '''import 'package:flutter/material.dart';
-import 'package:state_view/state_view.dart';
+  return '''import 'package:state_view/state_view.dart';
 import '${name}_view.dart';
 import '${name}_events.dart';
 export '${name}_events.dart';
 
 class $nameCapitalized extends StateView<${nameCapitalized}State> {
-  $nameCapitalized({Key? key})
-      : super(
-          key: key,
+  $nameCapitalized({
+    super.key,
+  }) : super(
           stateBuilder: (context) => ${nameCapitalized}State(context),
           view: ${nameCapitalized}View(),
         );
 }
 
 class ${nameCapitalized}State extends StateProvider<$nameCapitalized, ${nameCapitalized}Event> {
-  ${nameCapitalized}State(super.context);
-  @override
-  void onEvent(${nameCapitalized}Event event) {
-    return;
+  ${nameCapitalized}State(super.context) {
+    registerHandler<OnExampleTap>(_handleExampleTap);
+  }
+
+  void _handleExampleTap(OnExampleTap event) {
+    // TODO: handle example tap logic
   }
 }
 ''';
@@ -100,7 +101,7 @@ import 'package:provider/provider.dart';
 import '${name}_state.dart';
 
 class ${nameCapitalized}View extends StatelessWidget {
-  const ${nameCapitalized}View({Key? key}) : super(key: key);
+  const ${nameCapitalized}View({super.key});
   @override
   Widget build(BuildContext context) {
     final state = context.watch<${nameCapitalized}State>();

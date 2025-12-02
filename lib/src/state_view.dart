@@ -23,10 +23,10 @@ class StateView<T extends StateProvider> extends StatefulWidget {
   final T Function(BuildContext) stateBuilder;
   final Widget view;
   StateView({
-    Key? key,
+    super.key,
     required this.stateBuilder,
     required this.view,
-  }) : super(key: key) {
+  }) {
     assert(
       T.toString() != 'StateProvider<StatefulWidget, dynamic>',
       'Must specify a type.  '
