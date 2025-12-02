@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:state_view/state_view.dart';
 
-main() => runApp(
+void main() => runApp(
       MaterialApp(
         home: HomePage(initialUsername: 'test_username'),
       ),
@@ -13,17 +13,16 @@ main() => runApp(
 class HomePage extends StateView<HomeState> {
   final String initialUsername;
   HomePage({
-    Key? key,
+    super.key,
     required this.initialUsername,
   }) : super(
-          key: key,
           stateBuilder: (context) => HomeState(context),
           view: const HomeView(),
         );
 }
 
 class HomeState extends StateProvider<HomePage, HomeEvent> {
-  HomeState(BuildContext context) : super(context) {
+  HomeState(super.context) {
     _username = widget.initialUsername;
   }
 
@@ -70,9 +69,8 @@ class HomeView extends StatelessWidget {
 
 class SettingsPage extends StateView {
   SettingsPage({
-    Key? key,
+    super.key,
   }) : super(
-          key: key,
           stateBuilder: (context) => HomeState(context),
           view: Container(),
         );
@@ -122,9 +120,8 @@ class DependenciesChangeExampleButton extends StatelessWidget {
 class DependenciesChangedExample
     extends StateView<DependenciesChangedExampleState> {
   final String value;
-  DependenciesChangedExample({Key? key, required this.value})
+  DependenciesChangedExample({super.key, required this.value})
       : super(
-          key: key,
           stateBuilder: (context) => DependenciesChangedExampleState(context),
           view: const DependenciesChangedExampleView(),
         );
